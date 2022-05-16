@@ -12,42 +12,75 @@
 </h1>
 
 <h3 data-ng-if="game.winner == null">
-    <span data-ng-if="game.turn == null">Player Turn: Player north or player south can start the game</span>
+    <span data-ng-if="game.turn == null">Player Turn: Player1 or player2 can start the game</span>
     <span data-ng-if="game.turn != null">Player Turn: {{game.turn}}</span>
 </h3>
 
 <h3 data-ng-if="game.winner != null">
-    Winner: {{game.winner}}
+    <span>Game is finished</span><br>
+    <span>Winner: {{game.winner}}</span>
 </h3>
 
+<div align="center"><b>Player 1</b></div>
+<br>
 <table border="1" width="100%" align="center">
     <tbody>
     <tr align="center">
-        <td data-ng-click='play(game.id, 2, 13)'><div class="fancy">{{game.board.pits[12].stoneCount}}</div></td>
-        <td data-ng-click='play(game.id, 2, 12)'><div class="fancy">{{game.board.pits[11].stoneCount}}</div></td>
-        <td data-ng-click='play(game.id, 2, 11)'><div class="fancy">{{game.board.pits[10].stoneCount}}</div></td>
-        <td data-ng-click='play(game.id, 2, 10)'><div class="fancy">{{game.board.pits[9].stoneCount}}</div></td>
-        <td data-ng-click='play(game.id, 2, 9)'><div class="fancy">{{game.board.pits[8].stoneCount}}</div></td>
-        <td data-ng-click='play(game.id, 2, 8)'><div class="fancy">{{game.board.pits[7].stoneCount}}</div></td>
+        <td data-ng-click='move(game.id, 13)'>
+            <div class="pitStyle">{{game.board.pits[12].stoneCount}}</div>
+        </td>
+        <td data-ng-click='move(game.id, 12)'>
+            <div class="pitStyle">{{game.board.pits[11].stoneCount}}</div>
+        </td>
+        <td data-ng-click='move(game.id, 11)'>
+            <div class="pitStyle">{{game.board.pits[10].stoneCount}}</div>
+        </td>
+        <td data-ng-click='move(game.id, 10)'>
+            <div class="pitStyle">{{game.board.pits[9].stoneCount}}</div>
+        </td>
+        <td data-ng-click='move(game.id, 9)'>
+            <div class="pitStyle">{{game.board.pits[8].stoneCount}}</div>
+        </td>
+        <td data-ng-click='move(game.id, 8)'>
+            <div class="pitStyle">{{game.board.pits[7].stoneCount}}</div>
+        </td>
     </tr>
 
     <tr align="center">
-        <td><div class="fancy">{{game.board.pits[13].stoneCount}}</div></td>
+        <td>
+            <div class="pitStyle">{{game.board.pits[13].stoneCount}}</div>
+        </td>
         <td colspan="4"></td>
-        <td><div class="fancy">{{game.board.pits[6].stoneCount}}</div></td>
+        <td>
+            <div class="pitStyle">{{game.board.pits[6].stoneCount}}</div>
+        </td>
     </tr>
 
     <tr align="center">
-        <td data-ng-click='play(game.id, 1, 1)'><div class="fancy">{{game.board.pits[0].stoneCount}}</div></td>
-        <td data-ng-click='play(game.id, 1, 2)'><div class="fancy">{{game.board.pits[1].stoneCount}}</div></td>
-        <td data-ng-click='play(game.id, 1, 3)'><div class="fancy">{{game.board.pits[2].stoneCount}}</div></td>
-        <td data-ng-click='play(game.id, 1, 4)'><div class="fancy">{{game.board.pits[3].stoneCount}}</div></td>
-        <td data-ng-click='play(game.id, 1, 5)'><div class="fancy">{{game.board.pits[4].stoneCount}}</div></td>
-        <td data-ng-click='play(game.id, 1, 6)'><div class="fancy">{{game.board.pits[5].stoneCount}}</div></td>
+        <td data-ng-click='move(game.id, 1)'>
+            <div class="pitStyle">{{game.board.pits[0].stoneCount}}</div>
+        </td>
+        <td data-ng-click='move(game.id, 2)'>
+            <div class="pitStyle">{{game.board.pits[1].stoneCount}}</div>
+        </td>
+        <td data-ng-click='move(game.id, 3)'>
+            <div class="pitStyle">{{game.board.pits[2].stoneCount}}</div>
+        </td>
+        <td data-ng-click='move(game.id, 4)'>
+            <div class="pitStyle">{{game.board.pits[3].stoneCount}}</div>
+        </td>
+        <td data-ng-click='move(game.id, 5)'>
+            <div class="pitStyle">{{game.board.pits[4].stoneCount}}</div>
+        </td>
+        <td data-ng-click='move(game.id, 6)'>
+            <div class="pitStyle">{{game.board.pits[5].stoneCount}}</div>
+        </td>
     </tr>
 
     </tbody>
 </table>
+<br>
+<div align="center"><b>Player 2</b></div>
 
 <p style="color:red" data-ng-if="errorMessage ">Invalid Action: {{errorMessage}}</p>
 <script src="/lib/angular.min.js"></script>
@@ -58,27 +91,24 @@
 var app = angular.module('kalahApp', [])
 app.controller('KalahController', function($scope, $http) {
 
-    $http.post("/api/games/").then(function(resp){
-        console.log(resp.data);
-        $scope.game = resp.data;
+    $http.post("/api/games/").then(function(response){
+        $scope.game = response.data;
     })
 
-    $scope.play = function(gameId, playerId, pitId){
+    $scope.move = function(gameId, pitId){
 
         $scope.errorMessage = "";
-        $http.put("/api/games/"+gameId+"/pits/"+pitId+"").then(function(resp){
-            console.log(resp.data);
-            $scope.game = resp.data;
-            $scope.pits = resp.data.board.pits;
+        $http.put("/api/games/"+gameId+"/pits/"+pitId+"").then(function(response){
+            $scope.game = response.data;
+            $scope.pits = response.data.board.pits;
 
             $scope.total = 0
-            angular.forEach(resp.data.board.pits, function(pit, key) {
+            angular.forEach(response.data.board.pits, function(pit, key) {
               $scope.total += pit.stoneCount;
             });
 
-        }).catch(function(resp){
-            console.log(resp);
-            $scope.errorMessage = resp.data.message;
+        }).catch(function(response){
+            $scope.errorMessage = response.data.message;
         })
     }
 
