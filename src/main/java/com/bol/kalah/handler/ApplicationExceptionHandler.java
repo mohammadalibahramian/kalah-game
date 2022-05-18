@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ApplicationExceptionHandler {
 
     @ExceptionHandler(ApplicationException.class)
-    public final ResponseEntity<Error> handleApplicationException(final ApplicationException exception){
+    public final ResponseEntity<Error> handleApplicationException(final ApplicationException exception) {
         Error error = Error
                 .builder()
                 .message(exception.getMessage())

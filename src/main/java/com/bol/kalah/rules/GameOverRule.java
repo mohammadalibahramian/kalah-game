@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  * The winner of the game is the player who has the most stones in his house.
  */
 @Slf4j
-public class GameOverRule extends GameRule{
+public class GameOverRule extends GameRule {
     @Override
     public void execute(final Game game, final Integer pitId) {
         var player2Stones = game.getBoard().getStoneCount(Player.PLAYER_2, false);

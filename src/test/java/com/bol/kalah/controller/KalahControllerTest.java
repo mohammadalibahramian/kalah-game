@@ -76,4 +76,16 @@ public class KalahControllerTest {
                 .andExpect(jsonPath("$.board.pits[13].stoneCount").value("0"))
                 .andReturn();
     }
+
+    @Test
+    public void playGameWithInvalidPitId () throws Exception {
+        // Given
+        var invalidPitId = -1;
+        var game = kalahService.createGame();
+        // When
+        this.mockMvc.perform(put("/api/games/" + game.getId() + "/pits/" + invalidPitId))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("The pit id is invalid, it should be between 1...6 or 7...13"))
+                .andReturn();
+    }
 }

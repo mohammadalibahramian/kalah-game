@@ -1,8 +1,6 @@
 package com.bol.kalah.rule;
 
-import com.bol.kalah.exception.EmptyPitMoveException;
-import com.bol.kalah.exception.HouseMoveException;
-import com.bol.kalah.exception.WrongTurnException;
+import com.bol.kalah.exception.*;
 import com.bol.kalah.model.Game;
 import com.bol.kalah.model.Player;
 import com.bol.kalah.rules.runner.GameRunner;
@@ -66,8 +64,40 @@ public class ValidateMoveRuleTest {
         var wrongTurnException = assertThrows(
                 WrongTurnException.class,
                 () -> gameRunner.run(game, startMove),
-                "Expected play game throws an houseMoveException"
+                "Expected play game throws an wrongTurnException"
         );
         assertTrue(wrongTurnException.getMessage().contains("It is Player 1's turn"));
+    }
+
+    @Test
+    public void testMoveWithInvalidPitId() {
+        // Given
+        var game = new Game();
+        game.setTurn(Player.PLAYER_1);
+        var invalidPitId = 19;
+
+        // When / Then
+        var invalidPitIdException = assertThrows(
+                InvalidPitIdException.class,
+                () -> gameRunner.run(game, invalidPitId),
+                "Expected play game throws an invalidPitIdException"
+        );
+        assertTrue(invalidPitIdException.getMessage().contains("The pit id is invalid, it should be between 1...6 or 7...13"));
+    }
+
+    @Test
+    public void testMoveWhenGameIsFinished() {
+        // Given
+        var game = new Game();
+        game.setWinner(Player.PLAYER_1);
+        var startMove = 3;
+
+        // When / Then
+        var finishedGameSelectedException = assertThrows(
+                FinishedGameSelectedException.class,
+                () -> gameRunner.run(game, startMove),
+                "Expected play game throws an finishedGameSelectedException"
+        );
+        assertTrue(finishedGameSelectedException.getMessage().contains("this game is finished!"));
     }
 }

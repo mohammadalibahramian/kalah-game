@@ -1,9 +1,7 @@
 package com.bol.kalah.rules;
 
-import com.bol.kalah.exception.ApplicationException;
-import com.bol.kalah.exception.EmptyPitMoveException;
-import com.bol.kalah.exception.HouseMoveException;
-import com.bol.kalah.exception.WrongTurnException;
+import com.bol.kalah.exception.*;
+import com.bol.kalah.model.Board;
 import com.bol.kalah.model.Game;
 import com.bol.kalah.model.Player;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +14,11 @@ public class ValidateMoveRule extends GameRule {
     @Override
     public void execute(Game game, Integer pitId) {
         log.debug("start validating move from pit {}", pitId);
+        if (pitId < 1 || pitId > Board.PIT_END_INDEX) {
+            throw new InvalidPitIdException("The pit id is invalid, it should be between 1...6 or 7...13");
+        }
         if (game.getWinner() != null) {
-            throw new ApplicationException("this game is finished!");
+            throw new FinishedGameSelectedException("this game is finished!");
         }
         var startPit = game.getBoard().getPit(pitId);
         if (startPit.isHouse()) {

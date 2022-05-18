@@ -27,6 +27,7 @@ public class KalahServiceImpl implements KalahService {
     public Game move(String gameId, Integer pitId) {
         var game = repository.find(gameId);
         gameRunner.run(game, pitId);
+        repository.save(game);
         return game;
     }
 }
