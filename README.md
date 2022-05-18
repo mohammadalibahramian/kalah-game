@@ -58,3 +58,24 @@ You can find the APIs documentation for this application on
 You can find a simple visualization of game by accessing the following link
 
 <http://localhost:7575/>
+
+## Components
+
+* **Game**
+
+   Game is the domain model of Kalah game application.
+
+
+* **KalahController**
+   
+   Provides Rest Apis for creating and playing game.
+
+
+* **KalahService**
+
+   Provides the game logic by using an in-memory repository and a GameRunner component.  
+
+
+* **GameRunner**
+
+   Provides logic for sowing stones by applying game rules.
